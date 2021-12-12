@@ -23,7 +23,6 @@ functions and classes are used as decorators to augment existing functionality.
 
 # `========== time_me decorator used to time function/object run time ==========`
 import time
-import sys
 
 
 def time_me(f):
@@ -53,7 +52,7 @@ def time_me(f):
         results = f(*args, **kwargs)
         end = time.time()
         print(
-            f">>> {f.__name__} took {((end - start) * 1000) / 1000.0:.1f} seconds to run."
+            f'>>> {f.__name__} took {((end - start) * 1000) / 1000.0:.1f} seconds to run.'
         )
         return results
 
@@ -116,7 +115,6 @@ class Retry:
     Returns:
         Original wrapped function when used as a decorator
     """
-
     MAX_TRIES = 5
 
     def is_valid(self, resp):
@@ -130,17 +128,10 @@ class Retry:
                     resp = f(*args, **kwargs)
                     if self.is_valid(resp) or tries >= self.MAX_TRIES:
                         break
-                    try:
-                        resp.json()["stackTrace"]
-                        print(
-                            f'\n\n[ caller: {sys._getframe(2).f_code.co_name} --> {sys._getframe(1).f_code.co_name} ] {resp.json()["message"] }\n\n'
-                        )
-                        return resp
-                    except Exception as e:
-                        pass
                     tries += 1
                     time.sleep(tries + 1)
-                    print(f"Server error: {resp.status_code}, retries: {tries}\n")
+                    print(
+                        f'Server error: {resp.status_code}, retries: {tries}')
                 return resp
             except Exception as e:
                 print(e)
@@ -151,7 +142,6 @@ class Retry:
 
 class RetryOnAuthError(Retry):
     """clone Retry and make Auth error class"""
-
     MAX_TRIES = 1
 
     def is_valid(self, resp):
@@ -160,7 +150,6 @@ class RetryOnAuthError(Retry):
 
 class RetryOnServerError(Retry):
     """clone Retry and make Server error class"""
-
     MAX_TRIES = 5
 
     def is_valid(self, resp):
@@ -169,7 +158,6 @@ class RetryOnServerError(Retry):
 
 class RetryOnServerErrorLogin(Retry):
     """clone Retry and make Server error class"""
-
     MAX_TRIES = 1
 
     def is_valid(self, resp):

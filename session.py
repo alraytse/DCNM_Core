@@ -4,7 +4,7 @@
 Jose Lima
 Tue Nov 12 4:13:14 PM 2018
 
-Tested on: Python v3.6.3, DCNM v10.4.x, v11.0.1, and v11.2.1
+Tested on: Python v3.6.3, DCNM v10.4.x and v11.0.1
 
 This is the core module used for setup, tracking and teardown of API calls to DCNM
 
@@ -35,7 +35,6 @@ This is the core module used for setup, tracking and teardown of API calls to DC
 """
 # general imports
 import json
-import gzip
 
 # our baked in requests
 from . import requests
@@ -87,26 +86,23 @@ class SessionManager:
         self.logout_url = "/rest/logout"
         self.version_url = "/rest/dcnm-version"
         self.update_lan_creds_url = "/fm/fmrest/lanConfig/saveDefaultCredentials"
-        self.update_discovery_creds_url = "/fm/fmrest/san/setCdpSeed"
         self.user = user
         self._passwd = passwd
         self.fabric = None
         self.headers = {
-            "Accept": "application/json, text/plain",
+            "Accept": "application/json",
             "Content-Type": "application/json; charset=UTF-8",
         }
-        # removed from headers due to 11.3 issues with gzip.  Add back in next dcnm version if supported.
-        # "Content-Encoding": "gzip",
         self.expiration_time = 1000000
 
     def check_for_reauth(self, resp):
-        if "Access denied" in resp.text:
+        if resp.text == "Invalid Credential":
             self.login()
-            print(f"Re-authenticating session for {self.user}, done!\n")
+            print(f"Re-auth session for {self.user}, done!")
 
     @property
     def supported_versions(self):
-        self.DCNM_SUPPORTED_VERSIONS = ["11.2(1)", "11.3(1)", "11.4(1)"]
+        self.DCNM_SUPPORTED_VERSIONS = ["11.0(1)"]
         return self.DCNM_SUPPORTED_VERSIONS
 
     @retry_on_login_error
@@ -153,7 +149,6 @@ class SessionManager:
     def logout(self):
         # Dcnm-Token is already loaded through def login(), self.headers.update(json.loads(resp.text))
         url = self.base_url + self.logout_url
-        # del self.headers["Content-Encoding"]
         resp = requests.post(url, headers=self.headers, timeout=30, verify=False)
         if resp.status_code != 202:
             print(
@@ -187,48 +182,18 @@ class SessionManager:
         return resp
 
     @retry_on_auth_and_error
-    def post(self, url, data, timeout=1800):
+    def post(self, url, data, timeout=1200):
         url = self.base_url + url
-        # json_bytes = data.encode("utf-8")
-        print(f"\n[ client --> server ] payload sent, waiting for server response...")
         resp = requests.post(
-            url,
-            headers=self.headers,
-            # data=gzip.compress(json_bytes),
-            data=data,
-            timeout=timeout,
-            verify=False,
-        )
-        print(
-            f"[ server --> client ] response time delta: {resp.elapsed.total_seconds()} seconds\n"
+            url, headers=self.headers, data=data, timeout=timeout, verify=False
         )
         if not resp.ok:
-            print(f"Error: {url} --> {resp.text}\n")
+            print(f"Error: {url} --> {resp.text}")
             self.check_for_reauth(resp)
         return resp
 
     @retry_on_server_error
-    def update_discovery_creds(self, payload):
-        """updates discovery credentials in DCNM
-
-        """
-        url = self.base_url + self.update_discovery_creds_url
-        headers = {
-            "dcnm-token": self.headers["Dcnm-Token"],
-            "content-type": "application/x-www-form-urlencoded",
-            "cache-control": "no-cache",
-        }
-        resp = requests.post(
-            url, headers=headers, data=payload, timeout=30, verify=False
-        )
-        if not resp.ok and resp.text != "Operation is successful":
-            print(
-                f"Error: {url} --> {resp.text}.. Manually update Discovery creds in DCNM GUI"
-            )
-        return resp
-
-    @retry_on_server_error
-    def update_lan_creds(self, other_user=None, other_passwd=None):
+    def update_lan_creds(self):
         """updates LAN credentials in DCNM
 
         Lan credentials are obtain through object at time of creation.
@@ -245,18 +210,11 @@ class SessionManager:
             "content-type": "application/x-www-form-urlencoded",
             "cache-control": "no-cache",
         }
-        if other_user is None:
-            payload = {
-                "username": self.user,
-                "password": self._passwd,
-                "privProtocol": "N/A",
-            }
-        else:
-            payload = {
-                "username": other_user,
-                "password": other_passwd,
-                "privProtocol": "N/A",
-            }
+        payload = {
+            "username": self.user,
+            "password": self._passwd,
+            "privProtocol": "N/A",
+        }
         resp = requests.post(
             url, headers=headers, data=payload, timeout=30, verify=False
         )
@@ -267,14 +225,11 @@ class SessionManager:
         return resp
 
     @retry_on_auth_and_error
-    def get(self, url, timeout=30):
+    def get(self, url):
         url = self.base_url + url
-        resp = requests.get(url, headers=self.headers, timeout=timeout, verify=False)
+        resp = requests.get(url, headers=self.headers, timeout=30, verify=False)
         if not resp.ok:
-            try:
-                print(f"Error: {self.base_url} --> {resp.json()['message']}")
-            except Exception as e:
-                print(f"Error: {url} --> {resp.text}")
+            print(f"Error: {url} --> {resp.text}")
             self.check_for_reauth(resp)
         return resp
 
