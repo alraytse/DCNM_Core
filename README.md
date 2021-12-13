@@ -16,7 +16,7 @@ _Please see examples and documentation provided in the code for reference and us
 
 * Clone code from the server:
 
->git clone https://bitbucket.schwab.com/scm/ens/dcnm_core.git
+>git clone https://github.com/alraytse/DCNM_Core.git
 
 >cd dcnm_core/dist
 
