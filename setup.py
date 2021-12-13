@@ -7,12 +7,12 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name="dcnm",
     version="0.1.0",
-    author="Jose Lima | Jeff Kala",
-    author_email="jose.lima@schwab.com",
+    author="",
+    author_email="",
     description="Handles API calls to Cisco Data Center Network Manager",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://bitbucket.schwab.com/scm/ens/dcnm_core.git",
+    url="https://github.com/alraytse/DCNM_Core.git",
     # scripts=[
     #     'dcnm_bulk_create_deploy', 'dcnm_bulk_create_deploy_backout',
     #     'dcnm_bulk_interface_attach', 'dcnm_bulk_interface_attach_backout'
