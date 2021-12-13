@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 """
 
-Jeff Kala | Jose Lima
-Tue Feb 19 8:59:03 AM 2019
+
 
 collection of DNCM boilerplate calls
 
