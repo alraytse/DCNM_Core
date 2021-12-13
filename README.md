@@ -36,22 +36,9 @@ This step requires that you have access to our repositories in bitbucket
 
 * install over https:
 
->python3 -m pip install git+https://bitbucket.schwab.com/scm/ens/dcnm_core.git
+>python3 -m pip install git+https://github.com/alraytse/DCNM_Core.git
 
 
-* If updating existing installation (over https):
-
->python3 -m pip install git+https://bitbucket.schwab.com/scm/ens/dcnm_core.git
-
-
-* install over ssh:
-
->python3 -m pip install git+ssh://git@bitbucket.schwab.com:7999/ens/dcnm_core.git
-
-
-* If updating existing installation (over ssh):
-
->python3 -m pip install git+ssh://git@bitbucket.schwab.com:7999/ens/dcnm_core.git --upgrade
 
 <br/><br/> 
 ### Uninstall dcnm core module from python
@@ -67,8 +54,8 @@ way to backout or dettach/undeploy networks and interfaces. This scripts require
 the DCNM core module in order to run. You can install the scripts from:
 
 
->git clone https://bitbucket.schwab.com/scm/ens/dcnm_scripts.git 
-
+>git clone 
+https://github.com/alraytse/DCNM_Core.git
 <br/><br/> 
 ## Install missing dependencies
 ****************************
@@ -98,9 +85,6 @@ the DCNM core module in order to run. You can install the scripts from:
 ### Contributors
 ******************
 
-name | email
----|---
-**Jeff Kala** | *jeff.kala@schwab.com*
-**Jose Lima** | *jose.lima@schwab.com*
+
 <br/><br/> 
 
