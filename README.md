@@ -20,10 +20,6 @@ _Please see examples and documentation provided in the code for reference and us
 
 >cd dcnm_core/dist
 
-* Install:
-
->python3 -m pip install dcnm-0.1.0-py3-none-any.whl
-
 
 * If updating existing installation:
 
