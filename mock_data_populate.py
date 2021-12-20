@@ -12,9 +12,6 @@ import argparse, json
 from getpass import getpass
 from dcnm.core.session import SessionManager
 
-__author__ = "Jeff Kala"
-__date__ = "5/11/2020"
-__version__ = "0.0.1"
 
 if __name__ == "__main__":
     try:
