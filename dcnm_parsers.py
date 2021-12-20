@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 """DCNM data parsers
 
-Jose Lima | Jeff Kala
-Tue Feb 19 3:47:09 PM 2019
+
 
 Utilities used to read/write/convert data
 
