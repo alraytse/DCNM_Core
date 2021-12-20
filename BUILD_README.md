@@ -37,11 +37,4 @@ The following commands should run from the root directory where setup.py exists.
 
 </br>
 
-Built binaries will be placed in dist/ and can be installed using PIP
-
-Example:
-
-* New install
->python3 -m pip install git+https://github.com/alraytse/DCNM_Core.git
-
 
